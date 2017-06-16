@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive &mdash; Incredibly Uncertain</title>
+  <title>Sequence modelling: RNN, LSTM, GRU &mdash; Incredibly Uncertain</title>
   <meta name="author" content="Sandeep Tammu">
 
 
@@ -11812,6 +11812,8 @@ jQuery(document).ready(function($) {
 
 
 
+
+
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
@@ -11838,93 +11840,372 @@ jQuery(document).ready(function($) {
 
 
 <ul class="main-navigation">
-      <li >
+      <li class="active">
         <a href="/category/articles.html">Articles</a>
       </li>
 </ul></nav>
   <div id="main">
     <div id="content">
 <div>
-	<article role="article">
-    	<header>
-    		<h1 class="entry-title">Blog Archive</h1>
-    	</header>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Sequence modelling: RNN, LSTM, GRU</h1>
+    <p class="meta">
+<time datetime="2017-04-03T00:00:00+05:30" pubdate>Mon 03 April 2017</time>    </p>
+</header>
 
-    	<div id="blog-archives">
-            <h2>2017</h2>
-                    <article>
-                        <h1><a href="/regularization-in-deep-learning.html">Regularization in deep learning</a></h1>
-                        <time datetime="2017-06-16 00:00:00+05:30" pubdate>
-                            <span class="month">Jun</span>
-                            <span class="day">16</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/convolutional-neural-networks-notes.html">Convolutional Neural Networks Notes</a></h1>
-                        <time datetime="2017-04-03 00:00:00+05:30" pubdate>
-                            <span class="month">Apr</span>
-                            <span class="day">03</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/sequence-modelling-notes.html">Sequence modelling: RNN, LSTM, GRU</a></h1>
-                        <time datetime="2017-04-03 00:00:00+05:30" pubdate>
-                            <span class="month">Apr</span>
-                            <span class="day">03</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-            <h2>2016</h2>
-                    <article>
-                        <h1><a href="/face-detection-machine-learning.html">Multi class face detection using machine learning</a></h1>
-                        <time datetime="2016-02-29 00:00:00+05:30" pubdate>
-                            <span class="month">Feb</span>
-                            <span class="day">29</span>
-                            <span class="year">2016</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/visualizing-crime-data-against-women-india.html">Visualizing crime data against women across different states in India</a></h1>
-                        <time datetime="2016-02-29 00:00:00+05:30" pubdate>
-                            <span class="month">Feb</span>
-                            <span class="day">29</span>
-                            <span class="year">2016</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-	    </div>
-    </article>
+  <div class="entry-content"><p>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>ConvNets based on ideas of parameter sharing, and sparse connections succeeded in various tasks specific to images. It makes intuitive sense to extend the core idea of parameter sharing to represent sequential data. Consider two specific sequences that frequently occur in natural language processing.</p>
+<ol>
+<li>I went to Nepal in 2009.</li>
+<li>In 2009, I went to Nepal.</li>
+</ol>
+<p>We would like capture the sequential information to get a vector representation of such sequences. Ordinary bag-of-words models can not properly capture the positional information in a sentence. Recurrent Neural networks (RNN) extend this idea of learning dependencies between words efficiently using backpropagation, parameter sharing and using various hacks around it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">keras</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Using TensorFlow backend.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Recurrent-Neural-Networks">Recurrent Neural Networks<a class="anchor-link" href="#Recurrent-Neural-Networks">&#182;</a></h2><ul>
+<li>The ideal way to think about RNN's is a computational graph. The state of the network at a given postion is a function of the input at that position and feedback from the previous position. </li>
+<li>The weights are shared among the entire length of sequence. An  RNN will take a fixed length sequence and learns to represent it in a hidden state (h). </li>
+<li>The hidden state contains a noisy lookup table of all the previous states, so the network has access to information about long range dependencies. </li>
+<li>One can try to use something like a logistic regression at each position feeding it the output from previous sequences. But, it can not efficiently capture all the long range dependencies. On the other hand, shared parameter weights allow the RNN to generalize to unseen data.</li>
+</ul>
+<h3 id="Forward-Pass:-Elman-RNN">Forward Pass: Elman RNN<a class="anchor-link" href="#Forward-Pass:-Elman-RNN">&#182;</a></h3><p>Here is the forward pass of a vanilla RNN. The input is mapped into a hidden state by using a function of previous state and current input. The mapped hidden state is then used to predict a probability over classes.</p>
+<p>$ Input\ to\ hidden: a^{(t)} = b + W h^{(t-1)} + U x^{(t)} $</p>
+<p>$ Hidden\ activation: h^{(t)} = Tanh(a^{(t)}) $</p>
+<p>$ Output\ state: o^{(t)} = c + V h^{(t)} $</p>
+<p>$ Class\ probabilities: y^{(t)} = softmax(o^{(t)}) $</p>
+<h3 id="Backward-pass:">Backward pass:<a class="anchor-link" href="#Backward-pass:">&#182;</a></h3><p>During backward pass, one needs to compute the gradient of the loss with respect to the inputs. But in addition to that, we have a sequence that is coming in, each step contributing a loss. In the end, you have to backpropagate through the entire loss. This is called backpropagation through time (BPTT).</p>
+<p>$ Total\ loss\ for\ sequence\ length\ 1\ to\ \tau  = \sum L{(t)}$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Teacher-forcing-and-RNN's-with-output-recurrence:">Teacher forcing and RNN's with output recurrence:<a class="anchor-link" href="#Teacher-forcing-and-RNN's-with-output-recurrence:">&#182;</a></h2><ul>
+<li>You can wire these RNN's in various ways. One other possible variant of the RNN does not have any recurrence at the hidden state, but at the output.</li>
+<li>At time t+1, the model has access to the input at time t+1 and previous output at t.</li>
+<li><p>This can be parellelized very efficiently, and can be trained using 'teacher forcing'.</p>
+</li>
+<li><p>You can estimate the total probablity $ log P(y^{(1)}, y^{(2)} | x^{(1)}, x^{(2)}) $ as sum of two individual terms.</p>
+</li>
+<li>At test time, we don't have outputs. So noisy estimate of current output is used to estimate the next output.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Recurrent-Networks-as-Directed-Graphical-Models:">Recurrent Networks as Directed Graphical Models:<a class="anchor-link" href="#Recurrent-Networks-as-Directed-Graphical-Models:">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>RNN's can be intrepreted as fully connected graphical models over the sequence of outputs. To put it more bluntly, every future state can be influenced by it's every past state.</li>
+<li>If we were to start learning this fully connected graphical model without RNN's, there would be too many connections and parameters. This is very inefficient.</li>
+<li>Another nice way to intrepret RNN's is to think of hidden units as random variables capturing distribution between outputs efficiently.</li>
+<li>Traditionally it is common to take something like a Markov asssumption, meaning that one output can only be influenced by using the previous input. This assumption is restrictive, although it works in things like speech recognition. RNN's can capture long range dependencies very efficiently if trained with enough capacity and carefully choosen parameters.</li>
+<li>This makes the optimization very tough though. But the amount of efficiency we get in the prediction is insanely high. Let's say we have to predict k classes on a sequence of length $ \tau $. By using a graphical model, the parameters grow with $ O(k^{(\tau)}) $. If we use an RNN, the output order becomes $ O(1) $ because we are sharing the same parameters at each time step, there by learning a good generalized function.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Bidirectional-RNN's:">Bidirectional RNN's:<a class="anchor-link" href="#Bidirectional-RNN's:">&#182;</a></h2><ul>
+<li>The caveat with RNN's is that they only capture the information along one direction.</li>
+<li>Sometimes, you might have access to the whole sequence (let's say in a text classification). It then makes sense to have an RNN read the sequence backwards as well to capture any context that is coming from the other direction.</li>
+<li>Practioners in Speech recognition, handwriting recognition and bioinformatics fields are using Bidirectional RNN's to improve their performance.</li>
+<li>The output is concatenated from the forward and the backward RNN.</li>
+</ul>
+<h4 id="Bidirectional-RNN's-on-Images:">Bidirectional RNN's on Images:<a class="anchor-link" href="#Bidirectional-RNN's-on-Images:">&#182;</a></h4><ul>
+<li>This idea can be extended to two dimensional input as well.</li>
+<li>On every point in an image, you can use four RNN's to capture the contextual information coming from four direcitons. This helps the network to capture very long term dependencies on images as well.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Encoder-Decoder-Sequence-to-Sequence-RNN's:">Encoder-Decoder Sequence to Sequence RNN's:<a class="anchor-link" href="#Encoder-Decoder-Sequence-to-Sequence-RNN's:">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>In machine translation, and speech recognition, both input and output are sequences of variable length.</li>
+<li>In this case, an RNN could be used to encode the input sequence into a vector of fixed length and a decoder uses this vector to output the sequence.</li>
+<li>These networks are also trained to recognize the end of sequence and beginning of sequence as well. So, this process is completly end-to-end requiring no manual feature engineering.</li>
+<li>Machine translation models have been epitome of success of deep neural networks providing accurate performance across various languages.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Deep-Recurrent-Networks:">Deep Recurrent Networks:<a class="anchor-link" href="#Deep-Recurrent-Networks:">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Is depth advantageous in recurrent networks? Experiments strongly suggest 'yes'.</li>
+<li>There are various ways of introducing depth in RNN's.<ol>
+<li>Stack layers hierarchically</li>
+<li>A multi-layer perceptron between hidden to hidden connections instead of a direct single layer mapping.</li>
+<li>Skip connections between hidden layers leading to extra parameters</li>
+</ol>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Recursive-Neural-Networks:">Recursive Neural Networks:<a class="anchor-link" href="#Recursive-Neural-Networks:">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>These networks are structured as a deep tree rather than a sequential chain like RNN.</li>
+<li>In addition to tree like structure, one can introduce a certain level of parameter sharing among layers. This allows the network to learn the structure.</li>
+<li>However, trying to learn the structure automatically is not very easy. Questions like what kind of tree is required needs to be answered.</li>
+<li>These networks can be useful in NLP, they can be forced to learn the structure that mimics the parse tree of a sentence. Doing this dynamically is a challenge.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-challenge-of-capturing-long-term-dependencies:">The challenge of capturing long-term dependencies:<a class="anchor-link" href="#The-challenge-of-capturing-long-term-dependencies:">&#182;</a></h2><p>To derive this result, we might have to do backpropagation and look at the gradients. For the SimpleRNN defined above, we will backpropagate sequentially. I am abusing the notation here a little bit so that typing is easier.</p>
+<p>$ d(hidden) = (1- nexth^{2})\ d(nexth) $</p>
+<p>$ dW = d(hidden)\ (prevh) $</p>
+<p>$ d(prevh) = d(hidden)\ W $</p>
+<p>$ dU = d(hidden)\ (xcurrent) $</p>
+<p>$ dx = d(hidden)\ (U) $</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can see, the hidden state at time 't' depends on a previous hidden state. This matrix 'W' is randomly initialized and learned through backpropagation. As in the book, we can write the same as:</p>
+$$ h^{(t)} = W^{(T)} h^{(t-1)} $$<p>As you backpropagate through the sequence, the matrix $ W^{T} $ is raised to the power of sequence length. This makes the eigenvalues of the network either quickly explode or vanish. This problem is particular to RNN's as the weights are being shared across the network. Activation functions like $ Tanh $ squish the output between $ [-1,1] $. This has the effect of being multiplied by $ \tau $ small numbers or large numbers. This leads to gradient exploding or vanishing problem.</p>
+<p>Because of this reasons, training long term dependencies in RNN's has been an issue for a while. Although efficient techniques has been suggested to overcome it, because of the complext structure, it is difficult to optimize RNN's.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Overcoming-vanishing-or-exploding-gradient-problem:">Overcoming vanishing or exploding gradient problem:<a class="anchor-link" href="#Overcoming-vanishing-or-exploding-gradient-problem:">&#182;</a></h2><h4 id="Echo-state-networks:">Echo state networks:<a class="anchor-link" href="#Echo-state-networks:">&#182;</a></h4><ul>
+<li>Why bother backpropagating and yelling over exploding or vanishing gradients when you can find a good initialization of weights? If it is possible to find a set of weights that does not explode or vanish, we can use that weights. But how do you find them?</li>
+<li>The idea comes from dynamical systems, to stabilize the network, initialize the input weights such that the whole system is on the verge of stability.</li>
+<li>There is whole lot of theory around how you can manipulate the Jacobian eigenvalue spectrum and find a stable set of weights.</li>
+<li>This whole process seems a little difficult to optimize.</li>
+</ul>
+<h4 id="Leaky-units:">Leaky units:<a class="anchor-link" href="#Leaky-units:">&#182;</a></h4><ul>
+<li>You keep a running average of previous hidden states and learn an extra parameter $ \alpha $. This small network would enable the RNN to have a pivot so that backpropagation becomes possible again.</li>
+</ul>
+<h4 id="Skip-connections:">Skip connections:<a class="anchor-link" href="#Skip-connections:">&#182;</a></h4><ul>
+<li>You can include connections between hidden units, kind of like ResNets. This enables the network to capture the long term dependencies.</li>
+<li>Although these methods work to a certain extent, training RNN's using such methods is not straight-forward.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-long-short-term-memory-network-or-LSTM:">The long short term memory network or LSTM:<a class="anchor-link" href="#The-long-short-term-memory-network-or-LSTM:">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Training networks by above mentioned methods is not very easy. Gated RNN's like GRU's and LSTM's are developed as a work around method for gradient vanishing and exploding problems.</p>
+<p>Here is an LSTM in all it's glorified detail.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Each LSTM unit will have additional occurences along with the reoccurence imposed by the RNN.</li>
+<li>The system would have learned extra parameters that specify if it needs to update or forget it's state.</li>
+<li>This could be compared with leaky units, but addition of gates actually makes LSTM's more efficient and easy to train.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Optimization-Tweaks-for-Long-term-dependencies:">Optimization Tweaks for Long term dependencies:<a class="anchor-link" href="#Optimization-Tweaks-for-Long-term-dependencies:">&#182;</a></h2><h3 id="Clipping-Gradients:">Clipping Gradients:<a class="anchor-link" href="#Clipping-Gradients:">&#182;</a></h3><ul>
+<li>RNN's model very non-linear decision surfaces, and since we are also sharing the weights, exploding and vanishing gradients becomes a major issue.</li>
+<li>Gradients quickly explode undoing the work that has been done.</li>
+<li>Simple solution but works well in practise: <strong> Clipping the gradients </strong>
+$$ if g >> |v|\ replace\ g\ with\ (gv)/|g| $$</li>
+<li>You can clip gradients <ol>
+<li>Elementwise on a minibatch</li>
+<li>Just before updating the parameters</li>
+</ol>
+</li>
+<li>Both of them work.</li>
+</ul>
+<h3 id="Adding-regularization-to-encourage-information-flow:">Adding regularization to encourage information flow:<a class="anchor-link" href="#Adding-regularization-to-encourage-information-flow:">&#182;</a></h3><ul>
+<li>Add a regularization term to the loss such that it supports information flow through the network</li>
+<li>We would like to force the gradient to backpropagate
+$$ dL\ d(h^{(t)})/d(h^{(t-1)})\ ~= dL $$</li>
+<li>Choose the L2 regularization such that the above equation approximately holds.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Some-additional-things:">Some additional things:<a class="anchor-link" href="#Some-additional-things:">&#182;</a></h2><ul>
+<li>Explicit memory: NN's are good at capturing implicit memory. How to model facts?</li>
+<li>Intelligence requires a combination of implicit and explicit memory.</li>
+<li>Memory Networks: To be able to learn to read and write from arbitrary memory cells without explicit supervision, by using a context based soft-attention mechanism.</li>
+<li>Active research is still being done.</li>
+</ul>
+
+</div>
+</div>
+</div>
+ 
+
+</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        Sandeep Tammu
+    </span>
+  </span>
+<time datetime="2017-04-03T00:00:00+05:30" pubdate>Mon 03 April 2017</time>  <span class="categories">
+    <a class='category' href='/category/articles.html'>articles</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/notes.html">notes</a>,    <a class="category" href="/tag/neural-networks.html">neural-networks</a>,    <a class="category" href="/tag/sequence-modelling.html">sequence-modelling</a>,    <a class="category" href="/tag/deep-learning.html">deep-learning</a>,    <a class="category" href="/tag/rnn.html">rnn</a>,    <a class="category" href="/tag/lstm.html">lstm</a>,    <a class="category" href="/tag/gru.html">gru</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
 </div>
 <aside class="sidebar">
   <section>

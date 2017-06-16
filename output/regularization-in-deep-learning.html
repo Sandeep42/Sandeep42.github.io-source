@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive &mdash; Incredibly Uncertain</title>
+  <title>Regularization in deep learning &mdash; Incredibly Uncertain</title>
   <meta name="author" content="Sandeep Tammu">
 
 
@@ -11812,6 +11812,8 @@ jQuery(document).ready(function($) {
 
 
 
+
+
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
@@ -11838,93 +11840,566 @@ jQuery(document).ready(function($) {
 
 
 <ul class="main-navigation">
-      <li >
+      <li class="active">
         <a href="/category/articles.html">Articles</a>
       </li>
 </ul></nav>
   <div id="main">
     <div id="content">
 <div>
-	<article role="article">
-    	<header>
-    		<h1 class="entry-title">Blog Archive</h1>
-    	</header>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Regularization in deep learning</h1>
+    <p class="meta">
+<time datetime="2017-06-16T00:00:00+05:30" pubdate>Fri 16 June 2017</time>    </p>
+</header>
 
-    	<div id="blog-archives">
-            <h2>2017</h2>
-                    <article>
-                        <h1><a href="/regularization-in-deep-learning.html">Regularization in deep learning</a></h1>
-                        <time datetime="2017-06-16 00:00:00+05:30" pubdate>
-                            <span class="month">Jun</span>
-                            <span class="day">16</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/convolutional-neural-networks-notes.html">Convolutional Neural Networks Notes</a></h1>
-                        <time datetime="2017-04-03 00:00:00+05:30" pubdate>
-                            <span class="month">Apr</span>
-                            <span class="day">03</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/sequence-modelling-notes.html">Sequence modelling: RNN, LSTM, GRU</a></h1>
-                        <time datetime="2017-04-03 00:00:00+05:30" pubdate>
-                            <span class="month">Apr</span>
-                            <span class="day">03</span>
-                            <span class="year">2017</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-            <h2>2016</h2>
-                    <article>
-                        <h1><a href="/face-detection-machine-learning.html">Multi class face detection using machine learning</a></h1>
-                        <time datetime="2016-02-29 00:00:00+05:30" pubdate>
-                            <span class="month">Feb</span>
-                            <span class="day">29</span>
-                            <span class="year">2016</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-                    <article>
-                        <h1><a href="/visualizing-crime-data-against-women-india.html">Visualizing crime data against women across different states in India</a></h1>
-                        <time datetime="2016-02-29 00:00:00+05:30" pubdate>
-                            <span class="month">Feb</span>
-                            <span class="day">29</span>
-                            <span class="year">2016</span>
-                        </time>
-                        <footer>
-                            <span class="categories">posted in
-                                <a class='category' href='/category/articles.html'>articles</a>
-                                
-                            </span>
-                        </footer>
-                    </article>
-	    </div>
-    </article>
+  <div class="entry-content"><p>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A learned model has to perform well not only on training data, but also on unseen data. To ensure that the model did not overfit and generalize well, regularization is a prominently used method. To put it bluntly, regularization is any additional parameters or noise added to the learning model so as to make it more robust and general.</p>
+<p>Typically, regularization is a penalty added to the parameter space. Adding an extra term to the loss function puts an additional constraint on the optimization objective. Regularization is generally not applied to the bias term.</p>
+$$ \widetilde J(\theta; X,y) = J(\theta; X,y) + \alpha * W(\theta) $$<p>In deep learning, is is quite common to use different $ \alpha $ to different layers.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="7.1.-$-L^2$-(Ridge)-Regularization">7.1. $ L^2$ (Ridge) Regularization<a class="anchor-link" href="#7.1.-$-L^2$-(Ridge)-Regularization">&#182;</a></h3><ul>
+<li>The cost function for Ridge:</li>
+</ul>
+$$ \widetilde J(W; X,y) = J(W; X,y) + 0.5 * \alpha * W^T W $$$$ \nabla_W  \widetilde J(\theta; X,y) = \alpha * W + \nabla_W  J(W; X,y) $$<ul>
+<li>A single step of weight updates would need</li>
+</ul>
+$$ W \leftarrow W - \epsilon  ( \alpha * W + \nabla_W  J(W; X,y) ) $$$$ W \leftarrow (1- \epsilon \alpha) W + \epsilon \nabla_W  J(W; X,y) $$<ul>
+<li>This shrinks the weights by an extra constant factor. To get a intuition for what this extra tem is doing, Ian Goodfellow follows an elaborate path considering quadratic approximation of the loss function, and allows us to look at how eigenvalues of Hessian matrix effect the parameters W. I think this approximation is a beautiful thing to look at, so we will have to dig a little bit more into the math.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong> Note-1: </strong> Jacobian and Hessian matrices are generalization of differential calculus to multivariate functions.</p>
+<p>Jacobian $ \rightarrow $ All the first order derivatives of a function whose input and output are both vectors or      simply the gradient</p>
+<p>Hessian $ \rightarrow $  All the second order derivatives of a function whose input and output are both vectors or simply rate of change of gradient</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong> Note-2: </strong> Quadratic approximation of a function with Hessian matrix</p>
+<p>This is kind of like Taylor expansion for multivariate functions. Quadratic approximation can be deduced as-</p>
+<p>where $H_f(x_0)$ is the Hessian at point $ x_0 $</p>
+</li>
+</ul>
+$$ Q_f(x,y) = f(x_0) + \nabla f(x_0)(x-x_0) + 0.5 * \nabla (x-x_0)^T H_f(x_0) (x-x_0)$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p>Considering the quadratic approximation to cost function gives</p>
+<p>where $ W^* $ is the point at which the gradient vanishes</p>
+</li>
+</ul>
+$$ \widetilde J(W) = J(W^*) + 0.5 * (W-W^*)^T H (W-W^*) $$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p>To mimimize $ J(W) \rightarrow H(W-W^*) = 0 $</p>
+</li>
+<li><p>When regularization is added and quadratic approximation is used</p>
+</li>
+</ul>
+$$ \alpha \widetilde W + H(\widetilde W - W^*) = 0 $$$$ \widetilde W = (H+ \alpha I)^{-1} H W^* $$<ul>
+<li><p>So regularization actually changes the behavior of parameter space.</p>
+</li>
+<li><p>When $\alpha \rightarrow$ 0 the weight matrix approaches local minima. When $\alpha$ increases, using SVD of Hessian, where D is the diagonal matrix, and Q are the eigenvectors,</p>
+</li>
+</ul>
+$$ \widetilde W = (QDQ^T + \alpha I)^{-1} QDQ^T W^* $$<p></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Raising alpha with rescale the parameters along axis defined by eigenvectors.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><strong> Keypoint: </strong> Only the directions in which the parameters have contribution towards the minimization of objective function are preserved. In the other directions, eigenvalue of Hessian is not really significany and they are decayed. This sort of regularizes the unimportant variables in the data.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Example-of-Regularization-on-Linear-Regression:">Example of Regularization on Linear Regression:<a class="anchor-link" href="#Example-of-Regularization-on-Linear-Regression:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Cost function of linear regression without regularization.</li>
+</ul>
+$$ J(W) = {(XW- Y)}^T(XW- Y) $$<ul>
+<li>With regularization </li>
+</ul>
+$$ \widetilde J(W) = {(XW- Y)}^T(XW- Y) + 0.5 * \alpha * W^T W $$$$  W = {(X^TX + \alpha I)}^{-1} X^TY $$<ul>
+<li>Here $ X^TX $ is the covariance matrix, so an additional $\alpha$ is added to it.</li>
+<li>This makes the learning algorithm perceive X as having higher variance in one direction rather than the other.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="$L^1$-Regularization">$L^1$ Regularization<a class="anchor-link" href="#$L^1$-Regularization">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p>$ L^1 $ regularization is just the sum of absolute values of parameters.</p>
+<p>$$ \lambda(\theta) = | W |$$</p>
+</li>
+<li><p>The derivate of loss with respect to the weights becomes</p>
+<p>$$  \nabla_W \widetilde J(W;X,Y) = \alpha |W| + \nabla_W J(W;X,Y) $$</p>
+</li>
+</ul>
+<ul>
+<li><p>When you use this loss function in the optimization objective, it tends to make things either go to zero or it makes a shift in the parameters. The book goes into a little depth about this, I could not properly understand it.</p>
+</li>
+<li><p>This forces the optimizer to choose sparse solutions, hence $L^1$ is used as a feature selection method.</p>
+</li>
+<li><p><strong> Some trivia: </strong> $L^2$ regularization can be seen as Bayesian inference with a Gaussian prior and $L^1$ also has a similar intrepretation of prior.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.2.-Norm-Penalties-as-Constained-Optimization">7.2. Norm Penalties as Constained Optimization<a class="anchor-link" href="#7.2.-Norm-Penalties-as-Constained-Optimization">&#182;</a></h2><p>Should have read the fourth chapter first, my non-linear style reading made sure that I can't understand a thing out of this section. TO DO later!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.3.-Regularization-and-under-constrained-problems">7.3. Regularization and under-constrained problems<a class="anchor-link" href="#7.3.-Regularization-and-under-constrained-problems">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Linear regression and PCA depend on inverting the $X^TX$ matrix, it would not be possible when $X^TX$ is singular.</li>
+<li>Adding regularization will make it invertible!</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.4.-Data-Augmentation">7.4. Data Augmentation<a class="anchor-link" href="#7.4.-Data-Augmentation">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>You can create fake data and add it to the training data</li>
+<li>This equals to creating wide variety of transformations and making the model invariant to the them.</li>
+<li>This has been immensely effective for images. Simulation of various transformations is easy on images. Rotation, scaling and trnaslation are generally used.</li>
+<li>Speech recognition as well.</li>
+<li>Noise injection directly into network also works. If noise is injected in higher layers, it could be very robust. Dropout is the generalization of this idea of noise injection.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.5.-Noise-robustness">7.5. Noise robustness<a class="anchor-link" href="#7.5.-Noise-robustness">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>One can add noise to the weights, this can be seen as doing Bayesian inference over weights.</li>
+<li>Ian introduces one more good way to look at this, one can also intrepret adding additional noise as a sort of regularization.</li>
+<li>You can also add noise at the output labels. Real world datasets are bound to contain some noise, instead of trying to learn it, you can actually learn it.</li>
+<li>Label smoothing is the method where you assume that a probability of error ($\epsilon$), and smooth your labels according to that. ($ \epsilon / (k-1) $ and $ 1- \epsilon $).</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.6.-Semi-supervised-learning">7.6. Semi-supervised learning<a class="anchor-link" href="#7.6.-Semi-supervised-learning">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Assume that you have a lot of unlabelled data (P(x)) and some subset of labelled data (x,y).</li>
+<li>How to use best of the both worlds?</li>
+<li>You can train a discriminative model (optimizing -log P(y|x)) and a generative model of either P(x) (or P(x,y)).</li>
+<li>You can force to learn a good representative model by sharing the parameters between these two models taking use of best of both worlds.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.7.-Multitask-learning">7.7. Multitask learning<a class="anchor-link" href="#7.7.-Multitask-learning">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>You can use the same shared representation to learn various tasks. (one can be regression, one can be classfication)</li>
+<li>When you think about it, this is a very efficient way to learn as you share the parameters among them.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7.8.-Early-stopping">7.8. Early stopping<a class="anchor-link" href="#7.8.-Early-stopping">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>This is a very intutive hack which works better than selecting any other hyperparameters. You can avoid overfitting by keeping an eye on the validation loss.</li>
+<li>When the validation loss stops improving, you can stop updating the parameters at that point. In other words, you can get an underfit model by inferring loss patterns over validation loss.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+ 
+
+</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        Sandeep Tammu
+    </span>
+  </span>
+<time datetime="2017-06-16T00:00:00+05:30" pubdate>Fri 16 June 2017</time>  <span class="categories">
+    <a class='category' href='/category/articles.html'>articles</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/notes.html">notes</a>,    <a class="category" href="/tag/neural-networks.html">neural-networks</a>,    <a class="category" href="/tag/regularization.html">regularization</a>,    <a class="category" href="/tag/deep-learning.html">deep-learning</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
 </div>
 <aside class="sidebar">
   <section>
