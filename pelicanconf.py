@@ -2,22 +2,13 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = u'Sandeep Tammu'
-SITENAME = u'Incredibly Uncertain'
+AUTHOR = 'Sandeep Tammu'
+SITENAME = 'Incredibly Uncertain'
+SITESUBTITLE = u''
 SITEURL = ''
-
 PATH = 'content'
-MARKUP = ('md')
-PAGE_DIRS = ['pages']
-ARTICLE_DIRS = ['articles']
-PLUGIN_PATHS = ['plugins']
-STATIC_PATHS = ['images']
-PLUGINS = ['liquid_tags.notebook']
-TIMEZONE = 'Asia/Calcutta'
-THEME = 'theme'
-EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
-
-DEFAULT_LANG = u'en'
+TIMEZONE = 'America/Los_Angeles'
+DEFAULT_LANG = 'en'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -26,17 +17,53 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-# Blogroll
-# LINKS = (('Pelican', 'http://getpelican.com/'),
-         # ('Python.org', 'http://python.org/'),
-         # ('Jinja2', 'http://jinja.pocoo.org/'),
-         # ('You can modify those links in your config file', '#'),)
-
-# # Social widget
-# SOCIAL = (('You can add links in your config file', '#'),
-          # ('Another social link', '#'),)
+# Set the article URL
+ARTICLE_URL = 'blog/{date:%Y}/{date:%m}/{date:%d}/{slug}/'
+ARTICLE_SAVE_AS = 'blog/{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html'
 
 DEFAULT_PAGINATION = 10
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
+
+#MARKUP = ('md', 'ipynb')
+#PLUGINS = ['ipynb.markup']
+
+MARKUP = ['md']
+PLUGIN_PATHS = ['./plugins', './plugins/pelican-plugins']
+PLUGINS = [
+    'summary',       # auto-summarizing articles
+    'feed_summary',  # use summaries for RSS, not full articles
+    'ipynb.liquid',  # for embedding notebooks
+    'liquid_tags.img',  # embedding images
+    'liquid_tags.video',  # embedding videos
+    'liquid_tags.include_code',  # including code blocks
+    'liquid_tags.literal'
+]
+IGNORE_FILES = ['.ipynb_checkpoints']
+
+# for liquid tags
+CODE_DIR = 'downloads/code'
+NOTEBOOK_DIR = 'downloads/notebooks'
+
+# THEME SETTINGS
+THEME = './theme/'
+
+ABOUT_PAGE = '/pages/about.html'
+TWITTER_USERNAME = 'sandeeptammu'
+GITHUB_USERNAME = 'Sandeep42'
+#STACKOVERFLOW_ADDRESS = ''
+#AUTHOR_WEBSITE = 'http://sandeep42.github.io'
+AUTHOR_BLOG = 'http://sandeep42.github.io'
+# AUTHOR_CV = "http://staff.washington.edu/jakevdp/media/pdfs/CV.pdf"
+SHOW_ARCHIVES = True
+SHOW_FEED = False  # Need to address large feeds
+
+ENABLE_MATHJAX = True
+
+STATIC_PATHS = ['images', 'figures', 'videos', 'downloads', 'favicon.ico']
+
+# Footer info
+
+LICENSE_URL = "https://github.com/jakevdp/jakevdp.github.io-source/blob/master/LICENSE"
+LICENSE = "MIT"

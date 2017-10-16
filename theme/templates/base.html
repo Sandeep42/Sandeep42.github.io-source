@@ -1,84 +1,94 @@
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-{% if article and article.use_schema_org %}
-<head itemscope itemtype="http://schema.org/Article">
-{% else %}
-<head>
-{% endif %}
-  <meta charset="utf-8">
-  <title>{% block title %}{{ SITENAME }}{% endblock %}</title>
-  <meta name="author" content="{{ AUTHOR }}">
-  {% if article and article.description %}
-  <meta name="description" content="{{ article.description }}" />
-  {% endif %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="author" content="{{ AUTHOR }}">
+        <meta name="description" content="{% block description %}{%endblock%}">
+        <meta name="viewport" content="width=device-width">
+        <title>{% block title %}{% endblock %} | {{ SITENAME }}</title>
 
-  {% if FEED_FEEDBURNER %}
-  <link href="http://feeds.feedburner.com/{{ FEED_FEEDBURNER }}" type="application/rss+xml" rel="alternate"
-        title="{{ SITENAME }} RSS Feed" />
-  {% else %}
-  {% if FEED_ATOM %}
-  <link href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" type="application/atom+xml" rel="alternate"
-        title="{{ SITENAME }} Atom Feed" />
-  {% endif %}
-  {% if FEED_RSS %}
-  <link href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate"
-        title="{{ SITENAME }} RSS Feed" />
-  {% endif %}
-  {% endif %}
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="alternate" type="application/atom+xml" title="{{ SITENAME }} blog atom feed" href="/feeds/all.atom.xml" />
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 
-  {% if EXTRA_HEADER %}
-    {{ EXTRA_HEADER }}
-  {% endif %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/theme/css/icons.css"/>
+        <style>{% include 'pygments.css' %}</style>
+        <style>{% include 'main.css' %}</style>
 
-  {% if article %}
-  {% include '_includes/social_markup.html' %}
-  {% endif %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% if ENABLE_MATHJAX %}
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+        <script type="text/javascript">
+        init_mathjax = function() {
+            if (window.MathJax) {
+                // MathJax loaded
+                MathJax.Hub.Config({
+                    tex2jax: {
+                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+                    },
+                    displayAlign: 'left', // Change this to 'center' to center equations.
+                    "HTML-CSS": {
+                        styles: {'.MathJax_Display': {"margin": 0}}
+                    }
+                });
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            }
+        }
+        init_mathjax();
+        </script>
+    	{% endif %}
 
-  {% if article and article.status == 'draft' %}
-    <meta name="robots" content="noindex, nofollow" />
-  {% endif %}
+        {% block extra_head %}{%endblock%}
+    </head>
 
-  {% if FAVICON_FILENAME %}
-    <link href="{{ SITEURL }}/{{ FAVICON_FILENAME }}" rel="icon">
-  {% else %}
-    <link href="{{ SITEURL }}/favicon.png" rel="icon">
-  {% endif %}
+    <body>
+        <header class="navbar navbar-inverse bs-docs-nav">
+            <div class="container-fluid">
+                <div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#theNavbar">
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span> 
+		  </button>
+                  <a class="navbar-brand" href="/" title="Home" class="title">{{ SITENAME }}</a>
+                </div>
+                <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation" id="theNavbar">
+		    <ul class="nav navbar-nav navbar-right">
+                        {% if ABOUT_PAGE %}
+                            <li><a href="{{ ABOUT_PAGE }}" title="About">About</a></li>
+                        {% endif %}
+                        {% if PHOTOS_PAGE %}
+                            <li><a href="{{ PHOTOS_PAGE }}" title="Photos">Photos</a></li>
+                        {% endif %}
+                        {% if SHOW_ARCHIVES %}
+                            <li><a href="/archives.html" title="Archive">Archive</a></li>
+                        {% endif %}
+                        {% if SHOW_FEED %}
+                            <li><a class="nodec icon-rss" href="{{ FEED_ALL_ATOM }}" title="jakevdp.github.io RSS feed" rel="me"></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-  <link href="{{ SITEURL }}/theme/css/{{ CSS_FILE }}" media="screen, projection"
-        rel="stylesheet" type="text/css">
-
-  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
-        rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
-        rel="stylesheet" type="text/css">
-  {% if article and article.latex %}
-    {{ article.latex }}
-  {% endif %}
-  {% if page and page.latex %}
-    {{ page.latex }}
-  {% endif %}
-</head>
-
-<body>
-  <header role="banner">{% include '_includes/header.html' %}</header>
-  <nav role="navigation">{% include '_includes/navigation.html' %}</nav>
-  <div id="main">
-    <div id="content">
-      {% block content %}{% endblock %}
-      {% include '_includes/sidebar.html' %}
-    </div>
-  </div>
-  <footer role="contentinfo">{% include '_includes/footer.html' %}</footer>
-  <script src="{{ SITEURL }}/theme/js/modernizr-2.0.js"></script>
-  <script src="{{ SITEURL }}/theme/js/ender.js"></script>
-  <script src="{{ SITEURL }}/theme/js/octopress.js" type="text/javascript"></script>
-  {% include '_includes/after_footer.html' %}
-</body>
+        <div id="wrap">
+        {% block content %}{% endblock %}
+        </div>
+<!--
+    <footer>
+      <p>
+        © 2012-2017 {{ AUTHOR }}, license <a href="{{ LICENSE_URL}}"> {{LICENSE_NAME }}</a>
+        unless otherwise noted.
+        Generated by <a href= "http://docs.getpelican.com/">Pelican</a>.
+      </p>
+    </footer>
+-->
+        {% include '_includes/analytics.html' %}
+    </body>
 </html>
